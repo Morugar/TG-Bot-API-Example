@@ -43,6 +43,28 @@ def getMessage():
         }
         return data
 
+def getInvoice():
+
+    message = requests.post(URL + TOKEN + '/getUpdates')
+    count = counter(message)
+    print(message.json())
+    if (message.json()['ok'] == True and "pre_checkout_query" in message.json()):
+        data = {
+            'payment': {
+                'payment_id': message.json()['pre_checkout_query']['id'],
+                'invoice_payload': message.json()['pre_checkout_query']['invoice_payload']
+            }
+        }
+        return data
+    else:
+        data = {
+            'error': {
+                'code': 'null',
+                'description': 'unexpected'
+            }
+        }
+        return data
+
 def sendMessage(chat_id, message, message_id=0, keyboard=json.dumps({
     'keyboard': [],
     'resize_keyboard': True

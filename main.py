@@ -51,12 +51,19 @@ while True:
                 check = bot.sendPhoto(data['chat']['chat_id'], resp.json()['hits'][0]['webformatURL'], data['message']['message_id'], KEYBOARD)
                 answered.append(check['result']['reply_to_message']['message_id'])
                 break
-    # elif (data['message']['text'] == 'Оплата'):
-    #     check = bot.sendInvoice(data['chat']['chat_id'], data['message']['message_id'], KEYBOARD)
-    #     print(check)
-    #     while True:
-    #         data = bot.getMessage()
-    #         if data['message']['text'] == 'Оплата':
-    #             continue
-    #         else:
-    #             break
+    elif (data['message']['text'] == 'Оплата'):
+        check = bot.sendInvoice(data['chat']['chat_id'], data['message']['message_id'], KEYBOARD)
+        print(check)
+        while True:
+            data = bot.getInvoice()
+            print('\n')
+            print(data)
+            print('\n')
+            if 'error' in data:
+                continue
+            else: 
+                if data['message']['text'] == 'Оплата':
+                    continue
+                else:
+                    check = bot.sendMessage(data['chat']['chat_id'], 'Успешная оплата. invoice_payload: ' + data['payment']['invoice_payload'], KEYBOARD)
+                    break
